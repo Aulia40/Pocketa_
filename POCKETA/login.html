@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Login - POCKETA</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <div class="container">
+
+        <div class="logo">
+            POCKETA<span>.</span>
+        </div>
+
+        <h1>
+    Selamat datang, <?= htmlspecialchars($nama) ?>!
+        </h1>
+
+        <p>
+            Senang melihatmu kembali!
+            Masuk ke akun POCKETA untuk melanjutkan.
+        </p>
+
+        <!-- LOGIN FORM -->
+
+        <form id="loginForm">
+
+            <input
+                type="hidden"
+                id="loginRole"
+                value="user"
+            >
+
+            <div class="input-group">
+
+                <label>email</label>
+
+                <input
+                    type="email"
+                    id="email"
+                    name="email"
+                    placeholder="Masukkan email"
+                    required
+                >
+
+            </div>
+
+            <div class="input-group">
+
+                <label>password</label>
+
+                <input
+                    type="password"
+                    id="password"
+                    name="password"
+                    placeholder="Masukkan password"
+                    required
+                >
+
+            </div>
+
+            <button type="submit" class="btn">
+                Login
+            </button>
+
+        </form>
+
+
+        <p id="loginMessage" role="status"></p>
+
+        <p class="login-text">
+
+            Belum punya akun?
+
+            <a href="register.html">
+                Register
+            </a>
+
+        </p>
+
+        <p id="message"></p>
+
+    </div>
+
+    <script src="login.js"></script>
+
+</body>
+</html>
+
