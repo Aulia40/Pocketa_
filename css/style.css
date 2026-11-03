@@ -1,0 +1,315 @@
+/* =========================
+   POCKETA - BROWN & SOFT PINK
+========================= */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+body {
+    background: linear-gradient(
+        135deg,
+        #FBE9E7,
+        #F4C7C3,
+        #EAD6CC
+    );
+
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+/* CONTAINER */
+
+.container {
+    background: #FFF9F6;
+    padding: 40px;
+    border-radius: 22px;
+    width: 100%;
+    max-width: 430px;
+    text-align: center;
+
+    box-shadow: 0 12px 35px rgba(92, 64, 51, 0.12);
+}
+
+/* LOGO */
+
+.logo {
+    font-size: 34px;
+    font-weight: 800;
+    color: #5C4033;
+    margin-bottom: 20px;
+    letter-spacing: 1px;
+}
+
+.logo span {
+    color: #D89A9A;
+}
+
+/* HEADINGS */
+
+h1, h2 {
+    color: #5C4033;
+    margin-bottom: 12px;
+    font-weight: 700;
+}
+
+/* PARAGRAPH */
+
+p {
+    color: #8B6F60;
+    font-size: 14px;
+    line-height: 1.6;
+    margin-bottom: 25px;
+}
+
+/* MAIN BUTTON */
+
+.btn {
+    display: block;
+    width: 100%;
+    padding: 14px;
+
+    background: #8B6F60;
+    border: none;
+    border-radius: 12px;
+
+    color: #FFFFFF;
+    font-weight: 600;
+    font-size: 15px;
+    text-decoration: none;
+
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn:hover {
+    background: #5C4033;
+    transform: translateY(-2px);
+
+    box-shadow: 0 5px 15px rgba(92, 64, 51, 0.2);
+}
+
+/* ROLE SELECTION */
+
+.role-selection {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 25px;
+}
+
+.role-btn {
+    flex: 1;
+    padding: 12px;
+
+    border: 2px solid #EAD6CC;
+    border-radius: 12px;
+
+    background: #FFF9F6;
+    color: #8B6F60;
+
+    cursor: pointer;
+    font-weight: 600;
+    transition: 0.3s;
+}
+
+.role-btn:hover {
+    background: #FBE9E7;
+    border-color: #D8B7A6;
+}
+
+.role-btn.active {
+    background: #F4C7C3;
+    color: #5C4033;
+    border-color: #D89A9A;
+}
+
+/* INPUT GROUP */
+
+.input-group {
+    text-align: left;
+    margin-bottom: 18px;
+}
+
+.input-group label {
+    display: block;
+    margin-bottom: 8px;
+
+    font-size: 13px;
+    font-weight: 600;
+    color: #5C4033;
+}
+
+/* INPUT FIELD */
+
+.input-group input {
+    width: 100%;
+    padding: 13px 15px;
+
+    border: 1.5px solid #EAD6CC;
+    border-radius: 10px;
+
+    background: #FFFFFF;
+    color: #5C4033;
+
+    outline: none;
+    font-size: 14px;
+
+    transition: 0.3s;
+}
+
+.input-group input::placeholder {
+    color: #B5A09A;
+}
+
+.input-group input:focus {
+    border-color: #D89A9A;
+    background: #FFF9F6;
+
+    box-shadow: 0 0 0 3px rgba(244, 199, 195, 0.25);
+}
+
+/* LOGIN TEXT */
+
+.login-text {
+    margin-top: 22px;
+    margin-bottom: 0;
+    color: #8B6F60;
+}
+
+.login-text a {
+    color: #A66A6A;
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.login-text a:hover {
+    color: #5C4033;
+    text-decoration: underline;
+}
+
+/* VALIDATION MESSAGE */
+
+#message {
+    margin-top: 15px;
+    margin-bottom: 0;
+    font-weight: 600;
+    color: #5C4033;
+}
+
+/* RESPONSIVE */
+
+@media (max-width: 480px) {
+
+    .container {
+        padding: 28px 22px;
+        border-radius: 18px;
+    }
+
+    .logo {
+        font-size: 30px;
+    }
+
+    h1, h2 {
+        font-size: 23px;
+    }
+
+    .role-btn {
+        padding: 11px;
+        font-size: 13px;
+    }
+}
+
+/* ==========================
+   POCKETA WELCOME PAGE
+========================== */
+
+.welcome-container {
+    max-width: 460px;
+    padding: 45px 35px;
+    text-align: center;
+}
+
+/* LOGO IMAGE */
+
+.logo-image {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 25px;
+}
+
+.logo-image img {
+    width: 190px;
+    max-width: 100%;
+    height: auto;
+    object-fit: contain;
+
+    transition: transform 0.3s ease;
+}
+
+/* HOVER EFFECT */
+
+.logo-image img:hover {
+    transform: scale(1.05);
+}
+
+/* WELCOME TITLE */
+
+.welcome-container h1 {
+    font-size: 26px;
+    color: #5C4033;
+    font-weight: 700;
+    margin-bottom: 15px;
+}
+
+/* DESCRIPTION */
+
+.welcome-container > p:not(.login-text) {
+    color: #8B6F60;
+    font-size: 14px;
+    line-height: 1.8;
+    margin-bottom: 30px;
+}
+
+/* BUTTON */
+
+.welcome-container .btn {
+    background: #8B6F60;
+    color: white;
+    border-radius: 12px;
+    padding: 14px;
+}
+
+.welcome-container .btn:hover {
+    background: #5C4033;
+}
+
+/* LOGIN LINK */
+
+.welcome-container .login-text {
+    margin-top: 25px;
+    margin-bottom: 0;
+}
+
+/* MOBILE */
+
+@media (max-width: 480px) {
+
+    .welcome-container {
+        padding: 35px 25px;
+    }
+
+    .logo-image img {
+        width: 155px;
+    }
+
+    .welcome-container h1 {
+        font-size: 23px;
+    }
+}
