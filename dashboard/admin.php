@@ -1,4 +1,3 @@
-
 <?php
 
 session_start();
@@ -319,6 +318,15 @@ body {
     margin-top: 5px;
 }
 
+/* ADMIN MANAGEMENT GRID */
+
+.admin-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
 /* ORDERS */
 
 .order-container {
@@ -327,6 +335,7 @@ body {
     border-radius: 20px;
     box-shadow: 0 8px 25px rgba(92,64,51,.06);
     overflow-x: auto;
+    margin-bottom: 30px;
 }
 
 table {
@@ -474,7 +483,7 @@ footer span {
         grid-template-columns: 1fr 1fr;
     }
 
-    .secondary-stats {
+    .secondary-stats, .admin-grid {
         grid-template-columns: 1fr;
     }
 
@@ -672,9 +681,47 @@ footer span {
     </section>
 
 
+    <!-- KELOLA TOKO & ARTIKEL (GRID) -->
+
+    <div class="admin-grid">
+
+        <section class="welcome" style="margin-bottom: 0;">
+            <span>KELOLA TOKO</span>
+            <h2>Manajemen Katalog Produk</h2>
+            <p>
+                Tambahkan produk baru atau perbarui informasi
+                produk yang ditampilkan kepada pelanggan.
+            </p>
+            <br>
+            <a href="manage-products.php" class="view-all">
+                <i class="fa-solid fa-box"></i>
+                Kelola Katalog Produk
+                <i class="fa-solid fa-arrow-right"></i>
+            </a>
+        </section>
+
+        <section class="welcome" style="margin-bottom: 0;">
+            <span>KONTEN & SEO</span>
+            <h2>Kelola Artikel & Tips</h2>
+            <p>
+                Atur tautan artikel, tips seputar kerajinan tangan,
+                dan rekomendasi bacaan untuk pengunjung.
+            </p>
+            <br>
+            <!-- Ganti href dengan file manajemen artikel jika sudah dibuat nantinya -->
+            <a href="manage-articles.php" class="view-all" style="background: #99745F;">
+                <i class="fa-solid fa-newspaper"></i>
+                Kelola Artikel / Link
+                <i class="fa-solid fa-arrow-right"></i>
+            </a>
+        </section>
+
+    </div>
+
+
     <!-- PESANAN TERBARU -->
 
-    <section>
+    <section style="margin-top: 30px;">
 
         <div class="section-heading">
 
@@ -772,7 +819,7 @@ footer span {
 
                 <small>
                     Pesanan pelanggan akan muncul di sini setelah checkout berhasil.
-                </small>
+                </p>
 
             </div>
 
@@ -817,4 +864,3 @@ footer span {
 
 </body>
 </html>
-```

@@ -1,6 +1,7 @@
 <?php
 session_start();
 
+// Pastikan pengguna sudah login.
 if (!isset($_SESSION["user_id"])) {
     header("Location: ../login.html");
     exit;
@@ -8,33 +9,41 @@ if (!isset($_SESSION["user_id"])) {
 
 require_once "../config/database.php";
 
-// Ambil kategori yang dipilih
-$kategori = $_GET["kategori"] ?? "Semua";
+// Ambil kategori yang dipilih.
+$kategori = trim($_GET["kategori"] ?? "Semua");
 
-// Ambil daftar kategori dari database
+// Ambil daftar kategori dari database.
 $stmtKategori = $pdo->query(
-    "SELECT DISTINCT kategori FROM products ORDER BY kategori ASC"
+    "SELECT DISTINCT kategori
+     FROM products
+     WHERE kategori IS NOT NULL AND kategori <> ''
+     ORDER BY kategori ASC"
 );
 $daftarKategori = $stmtKategori->fetchAll(PDO::FETCH_COLUMN);
 
-// Ambil produk berdasarkan kategori
+// Ambil produk sesuai kategori.
+// Prepared statement digunakan agar input kategori aman.
 if ($kategori === "Semua") {
-    $stmt = $pdo->query("SELECT * FROM products ORDER BY created_at DESC");
+    $stmt = $pdo->query(
+        "SELECT * FROM products ORDER BY created_at DESC"
+    );
 } else {
     $stmt = $pdo->prepare(
-        "SELECT * FROM products WHERE kategori = ? ORDER BY created_at DESC"
+        "SELECT * FROM products
+         WHERE kategori = ?
+         ORDER BY created_at DESC"
     );
     $stmt->execute([$kategori]);
 }
 
 $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-// Format rupiah
+// Format rupiah.
 function rupiah($harga) {
-    return "Rp" . number_format($harga, 0, ",", ".");
+    return "Rp" . number_format((float)$harga, 0, ",", ".");
 }
 
-// Escape output
+// Escape output HTML.
 function e($value) {
     return htmlspecialchars((string)$value, ENT_QUOTES, "UTF-8");
 }
