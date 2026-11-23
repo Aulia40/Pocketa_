@@ -1,6 +1,4 @@
-
 <?php
-
 session_start();
 
 if (!isset($_SESSION["user_id"])) {
@@ -18,14 +16,15 @@ if (empty($cart)) {
 $total = 0;
 
 foreach ($cart as $item) {
-    $total += $item["harga"] * $item["jumlah"];
+    $total += (int)($item["harga"] ?? 0) * (int)($item["jumlah"] ?? 0);
 }
 
-$nama = $_SESSION["nama"];
-$email = $_SESSION["email"];
+$nama  = $_SESSION["nama"] ?? "";
+$email = $_SESSION["email"] ?? "";
 
+$transferChannels = ["BCA", "BRI", "BNI", "Mandiri", "BSI", "SeaBank"];
+$ewalletChannels  = ["DANA", "GoPay", "OVO", "ShopeePay", "QRIS"];
 ?>
-
 <!DOCTYPE html>
 <html lang="id">
 
@@ -38,7 +37,6 @@ $email = $_SESSION["email"];
     <link rel="stylesheet" href="../style.css">
 
     <style>
-
         body {
             display: block;
             padding: 0;
@@ -113,7 +111,8 @@ $email = $_SESSION["email"];
         }
 
         .form-group input,
-        .form-group textarea {
+        .form-group textarea,
+        .form-group select {
             width: 100%;
             padding: 12px;
             border: 1.5px solid #EAD6CC;
@@ -125,7 +124,8 @@ $email = $_SESSION["email"];
         }
 
         .form-group input:focus,
-        .form-group textarea:focus {
+        .form-group textarea:focus,
+        .form-group select:focus {
             border-color: #D89A9A;
         }
 
@@ -148,6 +148,47 @@ $email = $_SESSION["email"];
         .payment-option input {
             margin-right: 8px;
             accent-color: #A66A6A;
+        }
+
+        .payment-box {
+            display: none;
+            margin-top: 14px;
+            padding: 16px;
+            border: 1.5px dashed #EAD6CC;
+            border-radius: 12px;
+            background: #FFFFFF;
+        }
+
+        .payment-box.active {
+            display: block;
+        }
+
+        .rekening-box {
+            margin-top: 12px;
+            padding: 12px 14px;
+            border-radius: 10px;
+            background: #FFF9F6;
+            border: 1px solid #EAD6CC;
+            color: #5C4033;
+            font-size: 13px;
+            line-height: 1.6;
+        }
+
+        .qr-box {
+            display: none;
+            text-align: center;
+            margin: 15px 0;
+            padding: 14px;
+            border-radius: 12px;
+            background: #FFF9F6;
+            border: 1px solid #EAD6CC;
+        }
+
+        .info-note {
+            font-size: 12px;
+            color: #8B6F60;
+            margin-top: 6px;
+            line-height: 1.5;
         }
 
         .order-item {
@@ -196,29 +237,25 @@ $email = $_SESSION["email"];
                 width: 92%;
             }
         }
-
     </style>
 </head>
 
 <body>
 
 <nav class="navbar">
-
     <div class="logo">
         POCKE<span>TA</span>
     </div>
-
     <a href="cart.php" class="back-btn">
         ← Kembali ke Keranjang
     </a>
-
 </nav>
 
 <main class="checkout-container">
 
     <h1>Checkout 🩷</h1>
 
-    <form action="process-order.php" method="POST">
+    <form action="process-order.php" method="POST" enctype="multipart/form-data">
 
         <div class="checkout-grid">
 
@@ -284,8 +321,8 @@ $email = $_SESSION["email"];
                     <label class="payment-option">
                         <input
                             type="radio"
-                            name="pembayaran"
-                            value="Transfer Bank"
+                            name="kategori_pembayaran"
+                            value="transfer"
                             required
                         >
                         Transfer Bank
@@ -294,20 +331,90 @@ $email = $_SESSION["email"];
                     <label class="payment-option">
                         <input
                             type="radio"
-                            name="pembayaran"
-                            value="E-Wallet"
+                            name="kategori_pembayaran"
+                            value="e-wallet"
                         >
-                        E-Wallet
+                        E-Wallet / QRIS
                     </label>
 
                     <label class="payment-option">
                         <input
                             type="radio"
-                            name="pembayaran"
-                            value="COD"
+                            name="kategori_pembayaran"
+                            value="cod"
                         >
                         Cash on Delivery (COD)
                     </label>
+
+                    <div id="box-transfer" class="payment-box">
+                        <div class="form-group">
+                            <label for="channel-transfer">Pilih Bank</label>
+                            <select id="channel-transfer" name="channel_transfer">
+                                <option value="">-- Pilih Bank --</option>
+                                <?php foreach ($transferChannels as $bank): ?>
+                                    <option value="<?= htmlspecialchars($bank) ?>">
+                                        <?= htmlspecialchars($bank) ?>
+                                    </option>
+                                <?php endforeach; ?>
+                            </select>
+                        </div>
+
+                        <div class="rekening-box">
+                            <strong>901503934487</strong><br>
+                            A/N Pocketa official<br>
+                            SeaBank
+                        </div>
+
+                        <p class="info-note">
+                            Silakan transfer sesuai total pesanan lalu unggah bukti pembayaran di bawah.
+                        </p>
+                    </div>
+
+                    <div id="box-ewallet" class="payment-box">
+                        <div class="form-group">
+                            <label for="channel-ewallet">Pilih E-Wallet / QRIS</label>
+                            <select id="channel-ewallet" name="channel_ewallet">
+                                <option value="">-- Pilih E-Wallet / QRIS --</option>
+                                <?php foreach ($ewalletChannels as $wallet): ?>
+                                    <option value="<?= htmlspecialchars($wallet) ?>">
+                                        <?= htmlspecialchars($wallet) ?>
+                                    </option>
+                                <?php endforeach; ?>
+                            </select>
+                        </div>
+
+                        <div id="qr-dana-container" class="qr-box">
+                            <p class="info-note" style="margin-top: 0; color: #5C4033;">
+                                <strong>Pocketa official</strong><br>
+                                +62 821-9476-0155
+                            </p>
+                        </div>
+
+                        <p class="info-note">
+                            Setelah melakukan pembayaran, unggah screenshot bukti transaksi di bawah.
+                        </p>
+                    </div>
+
+                    <div id="box-bukti" class="payment-box">
+                        <div class="form-group" style="margin-bottom: 0;">
+                            <label for="bukti_pembayaran">Upload Bukti Pembayaran</label>
+                            <input
+                                type="file"
+                                id="bukti_pembayaran"
+                                name="bukti_pembayaran"
+                                accept="image/jpeg,image/png,image/webp"
+                            >
+                            <p class="info-note">
+                                Format JPG, PNG, atau WEBP. Ukuran maksimal 5 MB.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div id="box-cod" class="payment-box">
+                        <p class="info-note" style="margin-top: 0;">
+                            Pembayaran dilakukan langsung kepada kurir saat pesanan tiba. Tidak perlu upload bukti pembayaran.
+                        </p>
+                    </div>
 
                 </section>
 
@@ -322,29 +429,24 @@ $email = $_SESSION["email"];
                     <?php foreach ($cart as $item): ?>
 
                         <div class="order-item">
-
                             <span>
-                                <?= htmlspecialchars($item["nama"]) ?>
-                                × <?= (int)$item["jumlah"] ?>
+                                <?= htmlspecialchars((string)($item["nama"] ?? "Produk")) ?>
+                                × <?= (int)($item["jumlah"] ?? 0) ?>
                             </span>
-
                             <strong>
                                 Rp<?= number_format(
-                                    $item["harga"] * $item["jumlah"],
+                                    (int)($item["harga"] ?? 0) * (int)($item["jumlah"] ?? 0),
                                     0,
                                     ",",
                                     "."
                                 ) ?>
                             </strong>
-
                         </div>
 
                     <?php endforeach; ?>
 
                     <div class="summary-total">
-
                         <span>Total</span>
-
                         <span>
                             Rp<?= number_format(
                                 $total,
@@ -353,7 +455,6 @@ $email = $_SESSION["email"];
                                 "."
                             ) ?>
                         </span>
-
                     </div>
 
                     <button type="submit" class="submit-btn">
@@ -369,6 +470,60 @@ $email = $_SESSION["email"];
     </form>
 
 </main>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const radios = document.querySelectorAll('input[name="kategori_pembayaran"]');
+    const boxTransfer = document.getElementById("box-transfer");
+    const boxEwallet = document.getElementById("box-ewallet");
+    const boxBukti = document.getElementById("box-bukti");
+    const boxCod = document.getElementById("box-cod");
+    const qrDanaContainer = document.getElementById("qr-dana-container");
+
+    const selectTransfer = document.getElementById("channel-transfer");
+    const selectEwallet = document.getElementById("channel-ewallet");
+    const inputBukti = document.getElementById("bukti_pembayaran");
+
+    function updatePaymentUI() {
+        const selected = document.querySelector('input[name="kategori_pembayaran"]:checked');
+        const val = selected ? selected.value : "";
+
+        boxTransfer.classList.remove("active");
+        boxEwallet.classList.remove("active");
+        boxBukti.classList.remove("active");
+        boxCod.classList.remove("active");
+        qrDanaContainer.style.display = "none";
+
+        if (selectTransfer) selectTransfer.required = false;
+        if (selectEwallet) selectEwallet.required = false;
+        if (inputBukti) inputBukti.required = false;
+
+        if (val === "transfer") {
+            boxTransfer.classList.add("active");
+            boxBukti.classList.add("active");
+            if (selectTransfer) selectTransfer.required = true;
+            if (inputBukti) inputBukti.required = true;
+        } else if (val === "e-wallet") {
+            boxEwallet.classList.add("active");
+            boxBukti.classList.add("active");
+            qrDanaContainer.style.display = "block";
+            if (selectEwallet) selectEwallet.required = true;
+            if (inputBukti) inputBukti.required = true;
+        } else if (val === "cod") {
+            boxCod.classList.add("active");
+        }
+    }
+
+    radios.forEach((radio) => {
+        radio.addEventListener("change", updatePaymentUI);
+    });
+
+    if (selectTransfer) selectTransfer.addEventListener("change", updatePaymentUI);
+    if (selectEwallet) selectEwallet.addEventListener("change", updatePaymentUI);
+
+    updatePaymentUI();
+});
+</script>
 
 </body>
 </html>

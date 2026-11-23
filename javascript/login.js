@@ -40,6 +40,7 @@ document
                 }
             );
 
+            
             const text = await response.text();
 
             console.log("STATUS:", response.status);
@@ -48,22 +49,18 @@ document
             let result;
 
             try {
-
                 result = JSON.parse(text);
-
             } catch (error) {
 
-                console.error(
-                    "Response PHP bukan JSON:",
-                    text
-                );
+                console.error("PHP RESPONSE BUKAN JSON:", text);
 
                 message.style.color = "red";
                 message.textContent =
-                    "Server memberikan response yang tidak valid.";
+                    "Respons PHP tidak valid. Periksa Console.";
 
                 return;
             }
+
 
             if (response.ok && result.success) {
 

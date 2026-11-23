@@ -50,6 +50,7 @@ function e($value) {
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
+<link rel="stylesheet" href="/POCKETA/assets/css/user-navbar.css?v=2">
 <style>
 
 * {
@@ -66,62 +67,6 @@ body {
     font-family: 'DM Sans', sans-serif;
     color: #5C4033;
 }
-
-/* NAVBAR */
-
-.navbar {
-    width: 100%;
-    padding: 18px 7%;
-    background: rgba(255,249,246,0.92);
-    backdrop-filter: blur(15px);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    position: sticky;
-    top: 0;
-    z-index: 100;
-    box-shadow: 0 4px 20px rgba(92,64,51,0.06);
-}
-
-.logo {
-    font-size: 27px;
-    font-weight: 800;
-    letter-spacing: 2px;
-    color: #5C4033;
-}
-
-.logo span {
-    color: #D89A9A;
-}
-
-.nav-right {
-    display: flex;
-    align-items: center;
-    gap: 20px;
-}
-
-.nav-user {
-    font-size: 13px;
-    color: #8B6F60;
-    font-weight: 600;
-}
-
-.logout {
-    text-decoration: none;
-    padding: 10px 20px;
-    background: #5C4033;
-    color: white;
-    border-radius: 30px;
-    font-size: 12px;
-    font-weight: 600;
-    transition: .3s;
-}
-
-.logout:hover {
-    background: #D89A9A;
-    transform: translateY(-2px);
-}
-
 /* MAIN */
 
 .container {
@@ -130,7 +75,7 @@ body {
     margin: 45px auto;
 }
 
-/* BANNER SLIDER (GABUNGAN WELCOME & PROMO) */
+/* BANNER SLIDER */
 
 .slider-container {
     position: relative;
@@ -233,7 +178,7 @@ body {
     color: #5C4033;
 }
 
-/* Kontrol Slider (Tombol Panah & Titik) */
+/* Kontrol Slider */
 .slider-controls {
     position: absolute;
     bottom: 15px;
@@ -519,6 +464,7 @@ body {
     justify-content: center;
     color: #FFF9F6;
     font-size: 32px;
+    overflow: hidden;
 }
 
 .article-content {
@@ -629,18 +575,107 @@ body {
     overflow-wrap: anywhere;
 }
 
-/* FOOTER */
-
-.footer {
-    text-align: center;
-    padding: 30px 15px;
-    color: #927B6E;
-    font-size: 11px;
-    margin-top: 35px;
+/* MODERN FOOTER STYLING */
+.site-footer {
+    background: #FFF9F6;
+    border-radius: 25px 25px 0 0;
+    padding: 50px 7% 30px 7%;
+    margin-top: 60px;
+    box-shadow: 0 -10px 30px rgba(92, 64, 51, 0.04);
+    border-top: 1px solid rgba(234, 214, 204, 0.6);
 }
 
-.footer span {
+.footer-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr;
+    gap: 40px;
+    margin-bottom: 40px;
+    padding-bottom: 30px;
+    border-bottom: 1px solid #F0DED7;
+}
+
+.footer-col h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 20px;
+    margin-bottom: 15px;
+    color: #5C4033;
+}
+
+.footer-col p {
+    font-size: 13px;
+    line-height: 1.8;
+    color: #927B6E;
+    margin-bottom: 15px;
+}
+
+.footer-col ul {
+    list-style: none;
+}
+
+.footer-col ul li {
+    margin-bottom: 10px;
+}
+
+.footer-col ul li a {
+    text-decoration: none;
+    color: #927B6E;
+    font-size: 13px;
+    transition: 0.3s;
+}
+
+.footer-col ul li a:hover {
+    color: #5C4033;
+    padding-left: 5px;
+}
+
+.footer-socials {
+    display: flex;
+    gap: 12px;
+    margin-top: 15px;
+}
+
+.social-icon {
+    width: 36px;
+    height: 36px;
+    background: #FBE9E7;
+    color: #B47C7C;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    font-size: 14px;
+    transition: 0.3s;
+}
+
+.social-icon:hover {
+    background: #5C4033;
+    color: white;
+    transform: translateY(-3px);
+}
+
+.footer-bottom {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 12px;
+    color: #A58B7D;
+}
+
+.footer-bottom span {
     color: #C17E86;
+}
+
+@media(max-width: 768px) {
+    .footer-grid {
+        grid-template-columns: 1fr;
+        gap: 25px;
+    }
+    .footer-bottom {
+        flex-direction: column;
+        gap: 10px;
+        text-align: center;
+    }
 }
 
 /* RESPONSIVE */
@@ -662,17 +697,7 @@ body {
 }
 
 @media(max-width: 600px) {
-    .navbar {
-        padding: 16px 5%;
-    }
 
-    .logo {
-        font-size: 22px;
-    }
-
-    .nav-user {
-        display: none;
-    }
 
     .container {
         margin: 28px auto;
@@ -713,6 +738,7 @@ body {
     .section-heading h2 {
         font-size: 22px;
     }
+    
 }
 
 </style>
@@ -723,34 +749,16 @@ body {
 
 <!-- NAVBAR -->
 
-<nav class="navbar">
-
-    <div class="logo">
-        POCKE<span>TA.</span>
-    </div>
-
-    <div class="nav-right">
-
-        <span class="nav-user">
-            <i class="fa-regular fa-user"></i>
-            <?= htmlspecialchars($nama) ?>
-        </span>
-
-        <a href="../auth/logout.php" class="logout">
-            <i class="fa-solid fa-arrow-right-from-bracket"></i>
-            Logout
-        </a>
-
-    </div>
-
-</nav>
-
+<?php
+$activePage = "home";
+include "../includes/user-navbar.php";
+?>
 
 <!-- MAIN CONTENT -->
 
 <main class="container">
 
-    <!-- BANNER SLIDER (WELCOME & PROMO BERGESER) -->
+    <!-- BANNER SLIDER -->
 
     <div class="slider-container">
 
@@ -985,17 +993,18 @@ body {
     </section>
 
 
-  <!-- ARTIKEL / TIPS TERBARU -->
-    <section class="article-section">
+    <!-- ARTIKEL / KABAR RESMI POCKETA -->
+
+    <section class="article-section" id="artikel">
 
         <div class="section-heading">
             <div>
-                <h2>Inspirasi & Tips Handmade</h2>
-                <p>Rekomendasi bacaan menarik seputar dunia kerajinan tangan dan produk ramah lingkungan.</p>
+                <h2>Kabar & Cerita POCKETA</h2>
+                <p>Informasi terbaru, tips merawat produk, dan cerita di balik layar koleksi kami.</p>
             </div>
         </div>
 
-        <?php
+       <?php
         $stmtArt = $pdo->query("SELECT * FROM articles ORDER BY created_at DESC LIMIT 3");
         $db_articles = $stmtArt->fetchAll(PDO::FETCH_ASSOC);
         ?>
@@ -1003,10 +1012,14 @@ body {
         <div class="article-grid">
             <?php if (count($db_articles) > 0): ?>
                 <?php foreach ($db_articles as $art): ?>
-                    <a href="<?= e($art["url"]) ?>" target="_blank" class="article-card">
-                        <div class="article-img" style="overflow: hidden; display: flex; align-items: center; justify-content: center;">
+                    <?php 
+                        // Cek apakah artikel memiliki link luar khusus atau menggunakan halaman internal
+                        $has_external_url = (!empty($art["url"]) && $art["url"] !== "#");
+                        $target_link = $has_external_url ? e($art["url"]) : "article-detail.php?id=" . (int)$art["id"];
+                    ?>
+                    <a href="<?= $target_link ?>" <?= $has_external_url ? 'target="_blank"' : '' ?> class="article-card">
+                        <div class="article-img">
                             <?php if (!empty($art["gambar"])): ?>
-                                <!-- Pastikan menggunakan ../images/ karena file user.php ada di dalam folder dashboard -->
                                 <img src="../images/<?= e($art["gambar"]) ?>" alt="<?= e($art["title"]) ?>" style="width: 100%; height: 100%; object-fit: cover;">
                             <?php else: ?>
                                 <i class="fa-solid fa-wand-magic-sparkles"></i>
@@ -1016,13 +1029,13 @@ body {
                             <span class="article-date"><?= e($art["published_date"]) ?></span>
                             <h3><?= e($art["title"]) ?></h3>
                             <p><?= e($art["summary"]) ?></p>
-                            <span class="article-link">Baca Artikel <i class="fa-solid fa-arrow-up-right-from-square"></i></span>
+                            <span class="article-link">Baca Selengkapnya <i class="fa-solid fa-arrow-right"></i></span>
                         </div>
                     </a>
                 <?php endforeach; ?>
             <?php else: ?>
                 <div style="grid-column: span 3; text-align: center; padding: 30px; background: #FFF9F6; border-radius: 20px; color: #927B6E;">
-                    Belum ada artikel atau tips yang dipublikasikan.
+                    Belum ada kabar atau artikel resmi yang dipublikasikan.
                 </div>
             <?php endif; ?>
         </div>
@@ -1104,15 +1117,54 @@ body {
 </main>
 
 
-<!-- FOOTER -->
+<!-- MODERN FOOTER -->
+<footer class="site-footer">
+    <div class="footer-grid">
+        
+        <!-- Kolom 1: Tentang Brand -->
+        <div class="footer-col">
+            <div class="logo" style="margin-bottom: 12px; font-size: 24px;">
+                POCKE<span>TA.</span>
+            </div>
+            <p>
+                Platform kerajinan tangan lokal berkelanjutan. Menghadirkan produk dompet kain perca, 
+                tassel, dan aksesoris penuh kreativitas untuk menemani gaya hidup harianmu.
+            </p>
+            <div class="footer-socials">
+                <a href="#" class="social-icon"><i class="fa-brands fa-instagram"></i></a>
+                <a href="#" class="social-icon"><i class="fa-brands fa-whatsapp"></i></a>
+                <a href="#" class="social-icon"><i class="fa-solid fa-envelope"></i></a>
+            </div>
+        </div>
 
-<footer class="footer">
+        <!-- Kolom 2: Navigasi Cepat -->
+        <div class="footer-col">
+            <h3>Navigasi</h3>
+            <ul>
+                <li><a href="products.php">Katalog Produk</a></li>
+                <li><a href="order-history.php">Pesanan Saya</a></li>
+                <li><a href="profile.php">Profil Akun</a></li>
+            </ul>
+        </div>
 
-    <p>
-        © 2026 <strong>POCKETA</strong>.
-        Made with <span>♥</span> for handmade lovers.
-    </p>
+        <!-- Kolom 3: Bantuan & Info -->
+        <!-- Kolom 3: Bantuan & Info di Footer user.php -->
+        <div class="footer-col">
+            <h3>Bantuan</h3>
+            <ul>
+                <li><a href="help.php#cara-pemesanan">Cara Pemesanan</a></li>
+                <li><a href="help.php#kebijakan-pengiriman">Kebijakan Pengiriman</a></li>
+                <li><a href="help.php#kontak-admin">Kontak Admin</a></li>
+            </ul>
+        </div>
 
+    </div>
+
+    <!-- Copyright & Credit -->
+    <div class="footer-bottom">
+        <p>© 2026 <strong>POCKETA</strong>. All rights reserved.</p>
+        <p>Made with <span>♥</span> for handmade lovers in Indonesia.</p>
+    </div>
 </footer>
 
 </body>

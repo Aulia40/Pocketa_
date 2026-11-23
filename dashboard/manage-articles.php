@@ -18,7 +18,7 @@ $edit_data = [
     "title" => "",
     "slug" => "",
     "summary" => "",
-    "url" => "",
+    "content" => "",
     "category" => "",
     "published_date" => "",
     "gambar" => ""
@@ -40,17 +40,9 @@ if (isset($_GET["edit"])) {
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $id = $_POST["id"] ?? "";
     $title = trim($_POST["title"] ?? "");
-    
-    // Perbaikan: Ambil slug dari POST jika ada, jika tidak buat otomatis dari title
-    $slug_input = trim($_POST["slug"] ?? "");
-    if (!empty($slug_input)) {
-        $slug = $slug_input;
-    } else {
-        $slug = strtolower(trim(preg_replace('/[^A-Za-z0-9-]+/', '-', $title)));
-    }
-
+    $slug = strtolower(trim(preg_replace('/[^A-Za-z0-9-]+/', '-', $title)));
     $summary = trim($_POST["summary"] ?? "");
-    $url = trim($_POST["url"] ?? "");
+    $content = trim($_POST["content"] ?? "");
     $category = trim($_POST["category"] ?? "");
     $published_date = trim($_POST["published_date"] ?? "");
     $nama_gambar = $_POST["gambar_lama"] ?? "";
@@ -72,7 +64,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             
             $dest_path = $uploadFileDir . $newFileName;
             if (move_uploaded_file($fileTmpPath, $dest_path)) {
-                // Hapus gambar lama jika ada
                 if (!empty($nama_gambar) && file_exists("../images/" . $nama_gambar)) {
                     unlink("../images/" . $nama_gambar);
                 }
@@ -86,28 +77,28 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     }
 
     if (empty($error)) {
-        if (!empty($title) && !empty($url)) {
+        if (!empty($title) && !empty($content)) {
             if (!empty($id)) {
                 // Update Artikel
-                $stmt = $pdo->prepare("UPDATE articles SET title = ?, slug = ?, summary = ?, url = ?, category = ?, published_date = ?, gambar = ? WHERE id = ?");
-                if ($stmt->execute([$title, $slug, $summary, $url, $category, $published_date, $nama_gambar, $id])) {
+                $stmt = $pdo->prepare("UPDATE articles SET title = ?, slug = ?, summary = ?, content = ?, category = ?, published_date = ?, gambar = ? WHERE id = ?");
+                if ($stmt->execute([$title, $slug, $summary, $content, $category, $published_date, $nama_gambar, $id])) {
                     $sukses = "Artikel berhasil diperbarui!";
                     $edit_mode = false;
-                    $edit_data = ["id" => "", "title" => "", "slug" => "", "summary" => "", "url" => "", "category" => "", "published_date" => "", "gambar" => ""];
+                    $edit_data = ["id" => "", "title" => "", "slug" => "", "summary" => "", "content" => "", "category" => "", "published_date" => "", "gambar" => ""];
                 } else {
                     $error = "Gagal memperbarui artikel.";
                 }
             } else {
                 // Tambah Artikel Baru
-                $stmt = $pdo->prepare("INSERT INTO articles (title, slug, summary, url, category, published_date, gambar) VALUES (?, ?, ?, ?, ?, ?, ?)");
-                if ($stmt->execute([$title, $slug, $summary, $url, $category, $published_date, $nama_gambar])) {
+                $stmt = $pdo->prepare("INSERT INTO articles (title, slug, summary, content, url, category, published_date, gambar) VALUES (?, ?, ?, ?, '#', ?, ?, ?)");
+                if ($stmt->execute([$title, $slug, $summary, $content, $category, $published_date, $nama_gambar])) {
                     $sukses = "Artikel berhasil ditambahkan!";
                 } else {
                     $error = "Gagal menyimpan artikel ke database.";
                 }
             }
         } else {
-            $error = "Judul dan URL artikel wajib diisi!";
+            $error = "Judul dan Isi Artikel wajib diisi!";
         }
     }
 }
@@ -115,7 +106,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 // Proses Hapus Artikel
 if (isset($_GET["hapus"])) {
     $id = (int)$_GET["hapus"];
-    
     $stmtImg = $pdo->prepare("SELECT gambar FROM articles WHERE id = ?");
     $stmtImg->execute([$id]);
     $artData = $stmtImg->fetch(PDO::FETCH_ASSOC);
@@ -186,12 +176,12 @@ $articles = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 <nav class="navbar">
     <div class="logo">POCKE<span>TA.</span></div>
-    <a href="user.php" class="btn"><i class="fa-solid fa-arrow-left"></i> Dashboard Admin</a>
+    <a href="admin.php" class="btn"><i class="fa-solid fa-arrow-left"></i> Dashboard Admin</a>
 </nav>
 
 <div class="container">
 
-    <a href="user.php" class="back-link"><i class="fa-solid fa-chevron-left"></i> Kembali ke Dashboard</a>
+    <a href="admin.php" class="back-link"><i class="fa-solid fa-chevron-left"></i> Kembali ke Dashboard</a>
 
     <?php if ($sukses): ?>
         <div class="alert-sukses"><?= $sukses ?></div>
@@ -202,7 +192,7 @@ $articles = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     <!-- Form Tambah / Edit Artikel -->
     <div class="card">
-        <h2><?= $edit_mode ? "Edit Artikel" : "Tambah Artikel & Rekomendasi Link Baru" ?></h2>
+        <h2><?= $edit_mode ? "Edit Artikel" : "Tulis Artikel Baru POCKETA" ?></h2>
         <form action="" method="POST" enctype="multipart/form-data">
             <input type="hidden" name="id" value="<?= htmlspecialchars($edit_data["id"]) ?>">
             <input type="hidden" name="gambar_lama" value="<?= htmlspecialchars($edit_data["gambar"]) ?>">
@@ -210,35 +200,34 @@ $articles = $stmt->fetchAll(PDO::FETCH_ASSOC);
             <div class="form-grid">
                 <div class="form-group">
                     <label>Judul Artikel</label>
-                    <input type="text" name="title" required value="<?= htmlspecialchars($edit_data["title"]) ?>" placeholder="Contoh: Tips Merawat Dompet">
+                    <input type="text" name="title" required value="<?= htmlspecialchars($edit_data["title"]) ?>" placeholder="Contoh: Tips Merawat Dompet Kain POCKETA">
                 </div>
                 <div class="form-group">
                     <label>Kategori / Label Badge</label>
-                    <input type="text" name="category" required value="<?= htmlspecialchars($edit_data["category"]) ?>" placeholder="Contoh: Perawatan / Tips">
+                    <input type="text" name="category" required value="<?= htmlspecialchars($edit_data["category"]) ?>" placeholder="Contoh: Tips & Perawatan">
                 </div>
                 <div class="form-group">
-                    <label>URL / Link Artikel</label>
-                    <input type="url" name="url" required value="<?= htmlspecialchars($edit_data["url"]) ?>" placeholder="https://contoh.com/artikel">
+                    <label>URL / Link (Opsional: Jika artikel mengarah ke link luar)</label>
+                    <input type="url" name="url" value="<?= htmlspecialchars($edit_data["url"] ?? "#") ?>" placeholder="https://contoh.com atau biarkan #">
                 </div>
                 <div class="form-group">
-                    <label>Tanggal / Keterangan Waktu</label>
-                    <input type="text" name="published_date" required value="<?= htmlspecialchars($edit_data["published_date"]) ?>" placeholder="Contoh: 10 Nov 2026">
+                    <label>Tanggal Publikasi</label>
+                    <input type="text" name="published_date" required value="<?= htmlspecialchars($edit_data["published_date"]) ?>" placeholder="Contoh: 17 Nov 2026">
                 </div>
-                <div class="form-group full">
-                    <label>Gambar Thumbnail Artikel <?= $edit_mode ? "(Biarkan kosong jika tidak ingin mengubah gambar)" : "" ?></label>
-                    <?php if (!empty($edit_data["gambar"])): ?>
-                        <div style="margin-bottom: 8px;">
-                            <img src="../images/<?= htmlspecialchars($edit_data["gambar"]) ?>" style="width: 70px; height: 70px; border-radius: 8px; object-fit: cover;">
-                        </div>
-                    <?php endif; ?>
+                <div class="form-group">
+                    <label>Gambar Utama Artikel <?= $edit_mode ? "(Kosongkan jika tidak diganti)" : "" ?></label>
                     <input type="file" name="gambar" accept="image/*">
                 </div>
                 <div class="form-group full">
-                    <label>Ringkasan Singkat</label>
-                    <textarea name="summary" rows="3" required placeholder="Deskripsi singkat mengenai isi artikel..."><?= htmlspecialchars($edit_data["summary"]) ?></textarea>
+                    <label>Ringkasan Singkat (Tampil di Kartu Depan)</label>
+                    <textarea name="summary" rows="2" required placeholder="Tulis 1-2 kalimat singkat untuk cuplikan di beranda..."><?= htmlspecialchars($edit_data["summary"]) ?></textarea>
                 </div>
                 <div class="form-group full">
-                    <button type="submit"><i class="fa-solid fa-save"></i> <?= $edit_mode ? "Perbarui Artikel" : "Simpan Artikel" ?></button>
+                    <label>Isi Lengkap Artikel</label>
+                    <textarea name="content" rows="8" required placeholder="Tulis isi lengkap artikel di sini. Gunakan Enter untuk membuat paragraf baru..."><?= htmlspecialchars($edit_data["content"] ?? "") ?></textarea>
+                </div>
+                <div class="form-group full">
+                    <button type="submit"><i class="fa-solid fa-save"></i> <?= $edit_mode ? "Perbarui Artikel" : "Publikasikan Artikel" ?></button>
                     <?php if ($edit_mode): ?>
                         <a href="manage-articles.php" class="btn btn-cancel">Batal</a>
                     <?php endif; ?>
@@ -249,7 +238,7 @@ $articles = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     <!-- Daftar Artikel -->
     <div class="card">
-        <h2>Daftar Artikel Aktif</h2>
+        <h2>Daftar Artikel Terbit</h2>
         <div style="overflow-x: auto;">
             <table>
                 <thead>

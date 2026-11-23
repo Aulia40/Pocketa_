@@ -1,4 +1,3 @@
-
 <?php
 session_start();
 
@@ -10,12 +9,23 @@ if (!isset($_SESSION["last_order"])) {
 
 $order = $_SESSION["last_order"];
 
-function e($value) {
+function e($value): string
+{
     return htmlspecialchars((string)($value ?? ""), ENT_QUOTES, "UTF-8");
 }
 
-function rupiah($harga) {
+function rupiah($harga): string
+{
     return "Rp" . number_format((float)$harga, 0, ",", ".");
+}
+
+$buktiPath = trim((string)($order["bukti_pembayaran"] ?? ""));
+$buktiSrc  = "";
+if ($buktiPath !== "") {
+    // Jika file berada di ../uploads/payment_proofs/... dari folder halaman ini
+    $buktiSrc = str_starts_with($buktiPath, "../") || str_starts_with($buktiPath, "http")
+        ? $buktiPath
+        : "../" . ltrim($buktiPath, "/");
 }
 ?>
 
@@ -29,7 +39,7 @@ function rupiah($harga) {
     <title>Pesanan Berhasil | POCKETA</title>
 
     <style>
-        * {
+        *, *::before, *::after {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
@@ -160,13 +170,32 @@ function rupiah($harga) {
             color: #A66A6A;
         }
 
+        .status-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
         .status {
             display: inline-block;
             background: #F4C7C3;
             padding: 8px 14px;
             border-radius: 20px;
             font-size: 13px;
-            margin-top: 10px;
+        }
+
+        .proof-box {
+            margin-top: 14px;
+            text-align: center;
+        }
+
+        .proof-box img {
+            max-width: 240px;
+            max-height: 240px;
+            border-radius: 12px;
+            border: 1px solid #EAD6CC;
+            object-fit: cover;
         }
 
         .home-btn {
@@ -248,6 +277,13 @@ function rupiah($harga) {
                 <span><?= e($order["alamat"] ?? "-") ?></span>
             </div>
 
+            <?php if (!empty($order["catatan"])): ?>
+                <div class="detail-row">
+                    <span>Catatan</span>
+                    <span><?= e($order["catatan"]) ?></span>
+                </div>
+            <?php endif; ?>
+
             <div class="detail-row">
                 <span>Metode Pembayaran</span>
                 <span><?= e($order["pembayaran"] ?? "-") ?></span>
@@ -292,9 +328,23 @@ function rupiah($harga) {
 
             <h2>Status Pesanan</h2>
 
-            <span class="status">
-                <?= e($order["status"] ?? "Menunggu Pembayaran") ?>
-            </span>
+            <div class="status-group">
+                <span class="status">
+                    <?= e($order["status"] ?? "Menunggu Pembayaran") ?>
+                </span>
+
+                <?php if (!empty($order["status_pembayaran"])): ?>
+                    <span class="status">
+                        <?= e($order["status_pembayaran"]) ?>
+                    </span>
+                <?php endif; ?>
+            </div>
+
+            <?php if ($buktiSrc !== ""): ?>
+                <div class="proof-box">
+                    <img src="<?= e($buktiSrc) ?>" alt="Bukti Pembayaran">
+                </div>
+            <?php endif; ?>
 
         </div>
 

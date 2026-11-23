@@ -1,40 +1,58 @@
+
 <?php
 
-session_start();
+header("Content-Type: application/json; charset=UTF-8");
 
-header("Content-Type: application/json; charset=utf-8");
+ini_set("display_errors", "0");
+error_reporting(E_ALL);
 
-require_once __DIR__ . "/../config/database.php";
+function sendResponse($success, $message, $status = 200, $extra = []) {
 
-if ($_SERVER["REQUEST_METHOD"] !== "POST") {
+    http_response_code($status);
 
-    http_response_code(405);
-
-    echo json_encode([
-        "success" => false,
-        "message" => "Metode request tidak diizinkan"
-    ]);
-
-    exit;
-}
-
-$email = trim($_POST["email"] ?? "");
-$password = $_POST["password"] ?? "";
-
-if ($email === "" || $password === "") {
-
-    http_response_code(422);
-
-    echo json_encode([
-        "success" => false,
-        "message" => "Email dan password wajib diisi"
-    ]);
+    echo json_encode(
+        array_merge([
+            "success" => $success,
+            "message" => $message
+        ], $extra),
+        JSON_UNESCAPED_UNICODE
+    );
 
     exit;
 }
 
 try {
 
+    // 1. Periksa metode request
+    if ($_SERVER["REQUEST_METHOD"] !== "POST") {
+        sendResponse(
+            false,
+            "Metode request tidak diizinkan.",
+            405
+        );
+    }
+
+    // 2. Koneksi database
+    require_once __DIR__ . "/../config/database.php";
+
+    // 3. Mulai session
+    if (session_status() === PHP_SESSION_NONE) {
+        session_start();
+    }
+
+    // 4. Ambil data dari JavaScript
+    $email = trim($_POST["email"] ?? "");
+    $password = $_POST["password"] ?? "";
+
+    if ($email === "" || $password === "") {
+        sendResponse(
+            false,
+            "Email dan password wajib diisi.",
+            422
+        );
+    }
+
+    // 5. Cari pengguna
     $stmt = $pdo->prepare(
         "SELECT id, nama, email, password, role
          FROM users
@@ -44,33 +62,21 @@ try {
 
     $stmt->execute([$email]);
 
-    $user = $stmt->fetch(PDO::FETCH_ASSOC);
+    $user = $stmt->fetch();
 
-    if (!$user) {
-
-        http_response_code(401);
-
-        echo json_encode([
-            "success" => false,
-            "message" => "Email atau password salah"
-        ]);
-
-        exit;
+    // 6. Periksa akun dan password
+    if (
+        !$user ||
+        !password_verify($password, $user["password"])
+    ) {
+        sendResponse(
+            false,
+            "Email atau password salah.",
+            401
+        );
     }
 
-    if (!password_verify($password, $user["password"])) {
-
-        http_response_code(401);
-
-        echo json_encode([
-            "success" => false,
-            "message" => "Email atau password salah"
-        ]);
-
-        exit;
-    }
-
-    // Buat session
+    // 7. Buat session pengguna
     session_regenerate_id(true);
 
     $_SESSION["user_id"] = $user["id"];
@@ -78,25 +84,26 @@ try {
     $_SESSION["email"] = $user["email"];
     $_SESSION["role"] = $user["role"];
 
-    // Kirim hasil login ke JavaScript
-    echo json_encode([
-        "success" => true,
-        "message" => "Login berhasil!",
-        "role" => $user["role"]
-    ]);
+    // 8. Kirim respons JSON
+    sendResponse(
+        true,
+        "Login berhasil!",
+        200,
+        [
+            "role" => $user["role"],
+            "nama" => $user["nama"]
+        ]
+    );
 
-    exit;
+} catch (Throwable $e) {
 
-} catch (PDOException $e) {
+    error_log(
+        "POCKETA Login Error: " . $e->getMessage()
+    );
 
-    error_log($e->getMessage());
-
-    http_response_code(500);
-
-    echo json_encode([
-        "success" => false,
-        "message" => "Terjadi kesalahan pada database"
-    ]);
-
-    exit;
+    sendResponse(
+        false,
+        "Terjadi kesalahan pada server. Periksa konfigurasi database.",
+        500
+    );
 }
