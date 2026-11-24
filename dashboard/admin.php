@@ -829,6 +829,35 @@ footer span {
 
     </section>
 
+    <!-- KELOLA KUSTOMISASI AVATAR -->
+
+        <section class="welcome" style="margin-bottom: 0;">
+
+            <span>KUSTOMISASI PRODUK</span>
+
+            <h2>Kelola Avatar Gantungan Hewan</h2>
+
+            <p>
+                Atur karakter dasar, pilihan warna, telinga, mata,
+                motif, dan aksesori avatar POCKETA.
+                Kelola gambar, stok, dan harga tambahan.
+            </p>
+
+            <br>
+
+            <a href="manage-customization.php" class="view-all"
+            style="background: #B47C7C;">
+
+                <i class="fa-solid fa-palette"></i>
+
+                Kelola Kustomisasi
+
+                <i class="fa-solid fa-arrow-right"></i>
+
+            </a>
+
+        </section>
+
 
     <!-- ACCOUNT -->
 
