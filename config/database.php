@@ -1,11 +1,12 @@
 
 <?php
 
-$host = "127.0.0.1";
-$port = "3306";
-$dbname = "pocketa_db";
-$username = "root";
-$password = "";
+$host = "sql101.infinityfree.com";
+$port = 3306;
+
+$dbname = "if0_43517600_Pocketa_db";
+$username = "if0_43517600";
+$password = "I0lvACKcl9";
 
 try {
 
@@ -24,7 +25,6 @@ try {
 
     error_log("POCKETA Database Error: " . $e->getMessage());
 
-    throw new RuntimeException(
-        "Koneksi database gagal."
-    );
+    throw new RuntimeException("Koneksi database gagal.");
+
 }

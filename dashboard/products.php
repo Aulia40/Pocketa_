@@ -60,6 +60,7 @@ function e($value) {
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="/assets/css/user-navbar.css">
 
     <style>
         * {
@@ -315,16 +316,10 @@ function e($value) {
 
 <body>
 
-<header>
-    <div class="logo">POCKE<span>TA.</span></div>
-
-    <nav>
-        <a href="user.php">Dashboard</a>
-        <a href="products.php" style="color: #D89A9A;">Produk</a>
-        <a href="cart.php">Keranjang</a>
-        <a href="../auth/logout.php">Logout</a>
-    </nav>
-</header>
+<?php
+$activePage = "home";
+include "../includes/user-navbar.php";
+?>
 
 <main class="container">
 

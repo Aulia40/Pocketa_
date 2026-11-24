@@ -90,6 +90,7 @@ function e($value) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?= e($product["nama_produk"]) ?> | POCKETA</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="/assets/css/user-navbar.css">
 
     <style>
         * {
@@ -102,32 +103,6 @@ function e($value) {
             font-family: Arial, sans-serif;
             background: #FBE9E7;
             color: #5C4033;
-        }
-
-        header {
-            background: #FFF9F6;
-            padding: 20px 7%;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-shadow: 0 2px 10px rgba(92, 64, 51, 0.08);
-        }
-
-        .logo {
-            font-size: 25px;
-            font-weight: bold;
-            letter-spacing: 2px;
-        }
-
-        nav a {
-            text-decoration: none;
-            color: #8B6F60;
-            margin-left: 22px;
-            font-size: 14px;
-        }
-
-        nav a:hover {
-            color: #A66A6A;
         }
 
         .container {
@@ -353,15 +328,10 @@ function e($value) {
 
 <body>
 
-<header>
-    <div class="logo">POCKETA</div>
-    <nav>
-        <a href="user.php">Dashboard</a>
-        <a href="products.php">Produk</a>
-        <a href="cart.php">Keranjang</a>
-        <a href="../auth/logout.php">Logout</a>
-    </nav>
-</header>
+<?php
+$activePage = "home";
+include "../includes/user-navbar.php";
+?>
 
 <main class="container">
 
@@ -445,7 +415,7 @@ function e($value) {
                 
                 <div>
                     <label for="review_title">Judul Ulasan</label>
-                    <input type="text" id="review_title" name="review_title" required placeholder="Contoh: Dompetnya sangat rapi & cantik!" value="<?= $edit_data ? e($edit_data["review_title"]) : "" ?>">
+                    <input type="text" id="review_title" name="review_title" value="<?= $edit_data ? e($edit_data["review_title"]) : "" ?>">
                 </div>
 
                 <div>
@@ -462,8 +432,8 @@ function e($value) {
                 </div>
 
                 <div>
-                    <label for="review_content">Isi Ulasan</label>
-                    <textarea id="review_content" name="review_content" rows="4" required placeholder="Ceritakan kualitas bahan dan kenyamanan produk ini..."><?= $edit_data ? e($edit_data["review_content"]) : "" ?></textarea>
+                    <label for="review_content">Deskripsi</label>
+                    <textarea id="review_content" name="review_content" rows="4" ><?= $edit_data ? e($edit_data["review_content"]) : "" ?></textarea>
                 </div>
 
                 <button type="submit" name="submit_review" style="width: auto; padding: 12px 25px;">

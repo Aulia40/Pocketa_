@@ -100,6 +100,7 @@ function e($value) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Keranjang Belanja | POCKETA</title>
+    <link rel="stylesheet" href="/assets/css/user-navbar.css">
 
     <style>
         * {
@@ -112,27 +113,6 @@ function e($value) {
             font-family: Arial, sans-serif;
             background: #FBE9E7;
             color: #5C4033;
-        }
-
-        header {
-            background: #FFF9F6;
-            padding: 20px 7%;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .logo {
-            font-size: 25px;
-            font-weight: bold;
-            letter-spacing: 2px;
-        }
-
-        nav a {
-            text-decoration: none;
-            color: #8B6F60;
-            margin-left: 20px;
-            font-size: 14px;
         }
 
         .container {
@@ -287,16 +267,10 @@ function e($value) {
 
 <body>
 
-<header>
-    <div class="logo">POCKETA</div>
-
-    <nav>
-        <a href="user.php">Dashboard</a>
-        <a href="products.php">Produk</a>
-        <a href="cart.php">Keranjang</a>
-        <a href="../auth/logout.php">Logout</a>
-    </nav>
-</header>
+<?php
+$activePage = "cart";
+include "../includes/user-navbar.php";
+?>
 
 <main class="container">
 

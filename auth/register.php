@@ -1,80 +1,71 @@
+
 <?php
 
-header("Content-Type: application/json; charset=utf-8");
+header("Content-Type: application/json; charset=UTF-8");
 
-require_once __DIR__ . "/../config/database.php";
+ini_set("display_errors", "0");
+error_reporting(E_ALL);
 
-if ($_SERVER["REQUEST_METHOD"] !== "POST") {
-    http_response_code(405);
+function sendResponse($success, $message, $status = 200) {
+    http_response_code($status);
 
     echo json_encode([
-        "success" => false,
-        "message" => "Metode request harus POST"
-    ]);
+        "success" => $success,
+        "message" => $message
+    ], JSON_UNESCAPED_UNICODE);
 
-    exit;
-}
-
-$nama = trim($_POST["nama"] ?? "");
-$email = trim($_POST["email"] ?? "");
-$password = $_POST["password"] ?? "";
-
-if ($nama === "") {
-    echo json_encode([
-        "success" => false,
-        "message" => "Nama kosong"
-    ]);
-    exit;
-}
-
-if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-    echo json_encode([
-        "success" => false,
-        "message" => "Email tidak valid"
-    ]);
-    exit;
-}
-
-if (strlen($password) < 8) {
-    echo json_encode([
-        "success" => false,
-        "message" => "Password minimal 8 karakter"
-    ]);
     exit;
 }
 
 try {
 
-    // Cek apakah email sudah ada
+    // 1. Periksa metode request
+    if ($_SERVER["REQUEST_METHOD"] !== "POST") {
+        sendResponse(false, "Metode request tidak diizinkan.", 405);
+    }
+
+    // 2. Koneksi database
+    require_once __DIR__ . "/../config/database.php";
+
+    // 3. Ambil data
+    $nama = trim($_POST["nama"] ?? "");
+    $email = trim($_POST["email"] ?? "");
+    $password = $_POST["password"] ?? "";
+
+    // 4. Validasi
+    if ($nama === "") {
+        sendResponse(false, "Nama wajib diisi.", 422);
+    }
+
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        sendResponse(false, "Email tidak valid.", 422);
+    }
+
+    if (strlen($password) < 8) {
+        sendResponse(false, "Password minimal 8 karakter.", 422);
+    }
+
+    // 5. Periksa email
     $check = $pdo->prepare(
-        "SELECT id FROM users WHERE email = ?"
+        "SELECT id FROM users WHERE email = ? LIMIT 1"
     );
 
     $check->execute([$email]);
 
     if ($check->fetch()) {
-
-        http_response_code(409);
-
-        echo json_encode([
-            "success" => false,
-            "message" => "Email sudah terdaftar"
-        ]);
-
-        exit;
+        sendResponse(false, "Email sudah terdaftar.", 409);
     }
 
-    // Hash password
+    // 6. Hash password
     $hashedPassword = password_hash(
         $password,
         PASSWORD_DEFAULT
     );
 
-    // Simpan user
+    // 7. Simpan pengguna
     $stmt = $pdo->prepare(
-        "INSERT INTO users
-        (nama, email, password, role)
-        VALUES (?, ?, ?, ?)"
+        "INSERT INTO users (nama, email, password, role)
+         VALUES (?, ?, ?, ?)"
     );
 
     $stmt->execute([
@@ -84,18 +75,18 @@ try {
         "user"
     ]);
 
-    echo json_encode([
-        "success" => true,
-        "message" => "Registrasi berhasil!"
-    ]);
+    // 8. Respons berhasil
+    sendResponse(true, "Registrasi berhasil!", 201);
 
-} catch (PDOException $e) {
+} catch (Throwable $e) {
 
-    http_response_code(500);
+    error_log(
+        "POCKETA Register Error: " . $e->getMessage()
+    );
 
-    echo json_encode([
-        "success" => false,
-        "message" => "Database error",
-        "error" => $e->getMessage()
-    ]);
+    sendResponse(
+        false,
+        "Terjadi kesalahan pada server. Silakan coba kembali.",
+        500
+    );
 }

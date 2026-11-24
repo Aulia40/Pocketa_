@@ -1,11 +1,9 @@
 
 <?php
+
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
-
-$navNama = $_SESSION["nama"] ?? "Pengguna";
-$navInisial = strtoupper(substr($navNama, 0, 1));
 
 $activePage = $activePage ?? "";
 
@@ -16,13 +14,17 @@ $menuItems = [
     "articles" => ["Artikel", "user.php#artikel"],
     "help" => ["Bantuan", "help.php"]
 ];
+
 ?>
+
 <nav class="pk-navbar">
 
+    <!-- LOGO -->
     <a href="user.php" class="pk-logo">
         POCKE<span>TA.</span>
     </a>
 
+    <!-- MOBILE TOGGLE -->
     <button class="pk-toggle" id="pkToggle"
             type="button"
             aria-label="Buka navigasi"
@@ -32,6 +34,7 @@ $menuItems = [
 
     <div class="pk-menu" id="pkMenu">
 
+        <!-- MENU LINKS -->
         <div class="pk-links">
 
             <?php foreach ($menuItems as $key => $item): ?>
@@ -47,30 +50,42 @@ $menuItems = [
 
         </div>
 
+        <!-- NAVBAR ACTIONS -->
         <div class="pk-actions">
 
-            <a href="cart.php" class="pk-icon" title="Keranjang">
+            <!-- KERANJANG -->
+            <a href="cart.php"
+               class="pk-icon"
+               title="Keranjang"
+               aria-label="Keranjang">
+
                 <i class="fa-solid fa-bag-shopping"></i>
-            </a>
-
-            <a href="profile.php" class="pk-account">
-
-                <div class="pk-avatar">
-                    <?= htmlspecialchars($navInisial) ?>
-                </div>
-
-                <div class="pk-account-info">
-                    <strong><?= htmlspecialchars($navNama) ?></strong>
-                    <small>POCKETA Member</small>
-                </div>
 
             </a>
 
-            <a href="settings.php" class="pk-icon" title="Pengaturan">
+            <!-- AKUN / PROFIL -->
+            <a href="profile.php"
+               class="pk-icon"
+               title="Akun"
+               aria-label="Akun pengguna">
+
+                <i class="fa-regular fa-user"></i>
+
+            </a>
+
+            <!-- PENGATURAN -->
+            <a href="settings.php"
+               class="pk-icon"
+               title="Pengaturan"
+               aria-label="Pengaturan">
+
                 <i class="fa-solid fa-gear"></i>
+
             </a>
 
-            <a href="../auth/logout.php" class="pk-logout"
+            <!-- LOGOUT -->
+            <a href="../auth/logout.php"
+               class="pk-logout"
                onclick="return confirm('Yakin ingin logout?')">
 
                 <i class="fa-solid fa-arrow-right-from-bracket"></i>

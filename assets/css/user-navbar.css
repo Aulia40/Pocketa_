@@ -319,3 +319,111 @@
         font-size: 10px;
     }
 }
+
+
+/* Warna ikon navbar POCKETA */
+.pk-actions .pk-icon {
+    color: #5C4033 !important;
+    background: #FBE9E7;
+    border: 1px solid #EAD6CC;
+    border-radius: 10px;
+    width: 40px;
+    height: 40px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    transition: all .25s ease;
+}
+
+.pk-actions .pk-icon i {
+    color: #5C4033 !important;
+    font-size: 17px;
+}
+
+.pk-actions .pk-icon:hover {
+    background: #D89A9A;
+    border-color: #D89A9A;
+    transform: translateY(-2px);
+}
+
+.pk-actions .pk-icon:hover i {
+    color: #FFFFFF !important;
+}
+
+/* Ikon menu mobile */
+.pk-toggle {
+    color: #5C4033 !important;
+}
+
+.pk-toggle i {
+    color: #5C4033 !important;
+}
+
+/* Ikon logout */
+.pk-actions .pk-logout {
+    color: #FFFFFF !important;
+    background: #8B6F60;
+    border-radius: 10px;
+    padding: 11px 15px;
+}
+
+.pk-actions .pk-logout:hover {
+    background: #5C4033;
+}
+/* Logo POCKETA */
+.pk-logo {
+    color: #5C4033 !important;
+    font-weight: bold;
+}
+
+.pk-logo span {
+    color: #D89A9A !important;
+}
+
+/* Tombol ikon navbar */
+.pk-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.pk-actions .pk-icon {
+    width: 42px;
+    height: 42px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    background-color: #FFF9F6 !important;
+    color: #5C4033 !important;
+
+    border: 1px solid #EAD6CC;
+    border-radius: 12px;
+
+    text-decoration: none;
+    transition: all 0.25s ease;
+}
+
+.pk-actions .pk-icon i {
+    color: #5C4033 !important;
+    font-size: 17px;
+}
+
+.pk-actions .pk-icon:hover {
+    background-color: #D89A9A !important;
+    border-color: #D89A9A;
+}
+
+.pk-actions .pk-icon:hover i {
+    color: #FFFFFF !important;
+}
+
+/* Tombol menu pada tampilan HP */
+.pk-toggle {
+    color: #5C4033 !important;
+}
+
+.pk-toggle i {
+    color: #5C4033 !important;
+}
